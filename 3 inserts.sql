@@ -2,38 +2,37 @@ USE BD_VEHICULOS;
 GO
 -- INSERT PAISES
 INSERT INTO Paises VALUES
- ('W', 'Alemania'),
- ('8', 'Argentina'),
- ('6', 'Australia'),
- ('U', 'Austria'),
- ('B', 'Belgica'),
- ('9', 'Brasil'),
- ('2', 'Canada'),
- ('4', 'Chile'),
- ('L', 'China'),
- ('K', 'Corea del Sur'),
- ('C', 'Croacia'),
- ('V', 'España'),
- ('1', 'Estados Unidos'),
- ('D', 'Dinamarca'),
- ('G', 'Finlandia'),
- ('F', 'Francia'),
- ('E', 'Hungria'),
- ('M', 'India'),
- ('S', 'Inglaterra'),
- ('Z', 'Italia'),
- ('J', 'Japón'),
- ('3', 'Mexico'),
- ('H', 'Holanda'),
- ('7', 'Nueva Zelanda'),
- ('N', 'Polonia'),
- ('P', 'Portugal'),
- ('X', 'Rusia'),
- ('A', 'Sudafrica'),
- ('Y', 'Suecia'),
- ('T', 'Suiza'),
- ('R', 'Tailandia'),
- ('5', 'Uruguay');
+('W', 'Alemania'),
+('8', 'Argentina'),
+('6', 'Australia'),
+('B', 'Belgica'),
+('9', 'Brasil'),
+('2', 'Canada'),
+('4', 'Chile'),
+('L', 'China'),
+('K', 'Corea del Sur'),
+('C', 'Croacia'),
+('V', 'España'),
+('1', 'Estados Unidos'),
+('D', 'Dinamarca'),
+('G', 'Finlandia'),
+('F', 'Francia'),
+('E', 'Hungria'),
+('M', 'India'),
+('S', 'Inglaterra'),
+('Z', 'Italia'),
+('J', 'Japón'),
+('3', 'Mexico'),
+('H', 'Holanda'),
+('7', 'Nueva Zelanda'),
+('N', 'Polonia'),
+('P', 'Portugal'),
+('X', 'Rusia'),
+('A', 'Sudafrica'),
+('Y', 'Suecia'),
+('T', 'Suiza'),
+('R', 'Tailandia'),
+('5', 'Uruguay');
 GO
 -- INSERT FABRICANTES
 INSERT INTO Fabricantes VALUES
@@ -136,31 +135,57 @@ INSERT INTO Plantas VALUES
 GO
 -- INSERT ENVIOS
 INSERT INTO Envios VALUES
-('01/06/15',171900,'1','W'),
-('01/01/16',418510,'J','1'),
-('01/06/16',579000,'K','3'),
-('22/08/16',127080,'W','H'),
-('31/12/16',52350,'1','L'),
-('01/01/17',911400,'J','P'),
-('01/06/17',46800,'W','8'),
-('22/08/17',768000,'1','L'),
-('31/12/17',39720,'F','F'),
-('01/06/18',348150,'K','L');
+('03/06/14',2835,'1','W'),
+('05/01/15',2663.85,'J','1'),
+('07/06/15',1013.25,'K','3'),
+('22/08/15',1111.95,'W','H'),
+('29/12/15',1099.35,'1','L'),
+('04/01/16',4277.7,'J','P'),
+('06/01/16',1228.5,'W','L'),
+('11/01/16',1228.5,'W','M'),
+('17/01/16',1228.5,'W','L'),
+('20/01/16',1228.5,'W','9'),
+('07/06/16',1228.5,'W','8'),
+('22/08/16',2520,'1','L'),
+('30/12/16',1390.2,'F','F'),
+('11/06/17',5449.5,'K','L');
 GO
 -- INSERT CARGA
 INSERT INTO Carga VALUES
-(1, 1, '19XFA16869E003306',155250,150),
-(2, 2, '1G4HR54K544271535',88000,80),
-(2, 3, '1GKFC06289R108826',330510,230),
-(3, 4, 'JF1GJAS6XFH059334',579000,600),
-(4, 5, '1GCEG25NXF7110927',127080,120),
-(5, 6, 'LHJPCHL015B005929',52350,50),
-(1, 7, '4UZAASBW02CK70115',16650,10),
-(6, 8, '1FTCA15U8RZA00994',299250,190),
-(7, 9, '4JGBF2FB4AA566018',46800,40),
-(8, 10, 'JTHDL1EF2B5010450',768000,320),
-(6, 11, '1M2K193C0PM039279',146400,100),
-(6, 12, '2FTDF15H7HCA68059',465750,450),
-(9, 13, 'JTMZF4DVXAD035271',39720,30),
-(10, 14, 'JM1BL1UGXC1652359',164400,60),
-(10, 15, '1ZVHT88SX75361339',183750,75);
+(1, 1, '19XFA16869E003306',1086.75),
+(2, 2, '1G4HR54K544271535',1155),
+(2, 3, '1GKFC06289R108826',1508.85),
+(3, 4, 'JF1GJAS6XFH059334',1013.25),
+(4, 5, '1GCEG25NXF7110927',1111.95),
+(5, 6, 'LHJPCHL015B005929',1099.35),
+(1, 7, '4UZAASBW02CK70115',1748.25),
+(6, 8, '1FTCA15U8RZA00994',1653.75),
+(7, 10, '4JGBF2FB4AA566018',1228.5),
+(8, 11, '4JGBF2FB4AA566018',1228.5),
+(9, 12, '4JGBF2FB4AA566018',1228.5),
+(10, 13, '4JGBF2FB4AA566018',1228.5),
+(11, 9, '4JGBF2FB4AA566018',1228.5),
+(12, 14, 'JTHDL1EF2B5010450',2520),
+(6, 15, '1M2K193C0PM039279',1537.2),
+(6, 16, '2FTDF15H7HCA68059',1086.75),
+(13, 17, 'JTMZF4DVXAD035271',1390.2),
+(14, 18, 'JM1BL1UGXC1652359',2877),
+(14, 19, '1ZVHT88SX75361339',2572.5);
+----------------------------------------------------------------------------
+-- INVALID DATA FOR TEST
+INSERT INTO Paises VALUES
+('T', 'Uzbekistán'), -- REPEATED PRIMARY KEY
+('U', 'Uruguay') -- COUNTRY NOT UNIQUE
+INSERT INTO Fabricantes VALUES
+('FF', 'Ferrari', 'Maranello, Italia', 'info@ferrari', 29500), -- EMAIL NOT UNIQUE
+('LF', 'Lifan Industry Group', 'Chongqing, China', 'info@lifan', 0) -- NO EMPLOYEES
+INSERT INTO Vehiculos VALUES
+('1M2K193C0PI039279', 'Volkswagen Vento', 'Negro Classic', 1437, '2.5R, gasolina 5 s., manual', 'W', 'VW'), -- VIN CONTAIN 'I'
+('1HFSC47L48A711588', 'Chevrolet Corsa', 'Blano Marfil', 948, '92 Cv, gasolina 5 s., manual', 'U', 'FF') -- INVALID FOREIGN KEY
+INSERT INTO Plantas VALUES
+(453448, 'SE', 'Sevel', 'Montevideo, Uruguay', 'info@sevel.com', 'U'), -- INVALID FOREIGN KEY
+(453448, 'SE', 'Sevel', 'Montevideo, Uruguay', 'info@bran.com', 'U') -- EMAIL NOT UNIQUE
+INSERT INTO Envios VALUES
+('04/07/14',171900,'U','L') -- INVALID FOREIGN KEY
+INSERT INTO Carga VALUES
+(22, 30, '1GKFC06289R108826',1508.85) -- INVALID FOREIGN KEY

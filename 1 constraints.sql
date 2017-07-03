@@ -34,7 +34,6 @@ ADD CONSTRAINT pk_envios PRIMARY KEY (idEnvio),
 GO
 --TABLE CARGA
 ALTER TABLE Carga
-ADD cantUds int NOT NULL,
-    CONSTRAINT pk_carga PRIMARY KEY (idEnvio, idCarga),
+ADD CONSTRAINT pk_carga PRIMARY KEY (idEnvio, idCarga),
     FOREIGN KEY (idEnvio) REFERENCES Envios(idEnvio),
     FOREIGN KEY (vin) REFERENCES Vehiculos(vin);
