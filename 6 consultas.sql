@@ -2,9 +2,9 @@ USE BD_VEHICULOS;
 GO
 
 -- QUERY A
-SELECT MAX(pesoEnvio) AS  'Máximo Peso del Año', MIN(pesoEnvio) AS 'Mínimo Peso del Año', MIN(FORMAT(fchEnvio, 'dd/MM/yy')) AS 'Primera Fecha del Año', MAX(FORMAT(fchEnvio, 'dd/MM/yy')) AS 'Última Fecha del Año'
+SELECT MAX(pesoEnvio) AS  'Máximo Peso del Período', MIN(pesoEnvio) AS 'Mínimo Peso del Período', MAX(fchEnvio) AS 'Mayor Fecha del Período', MIN(fchEnvio) AS 'Menor Fecha del Período'
 FROM Envios
-WHERE YEAR(fchEnvio) IN (2015, 2016)
+WHERE YEAR(fchEnvio) IN (2015,2016)
 
 -- QUERY B
 SELECT F.nomFab AS 'Nombre del Fabricante', COUNT(nomFab) AS 'Vehiculos Enviados', SUM(V.peso) AS 'Peso Total Envios 2016'
