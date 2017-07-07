@@ -2,8 +2,7 @@ USE BD_VEHICULOS;
 GO
 
 -- QUERY A
-SELECT MAX(pesoEnvio) AS  'Máximo Peso del Período', MIN(pesoEnvio) AS 'Mínimo Peso del Período',
-			 MAX(fchEnvio) AS 'Mayor Fecha del Período', MIN(fchEnvio) AS 'Menor Fecha del Período'
+SELECT MAX(pesoEnvio) AS  'Máximo Peso del Período', MIN(pesoEnvio) AS 'Mínimo Peso del Período', MAX(fchEnvio) AS 'Mayor Fecha del Período', MIN(fchEnvio) AS 'Menor Fecha del Período'
 FROM Envios
 WHERE YEAR(fchEnvio) IN (2015,2016)
 
@@ -14,15 +13,25 @@ WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio AND YEAR(E
 GROUP BY F.nomFab
 ORDER BY SUM(V.peso) DESC
 
+-- QUERY C
+SET DATEFORMAT DMY
+SELECT nomPais 'Nombre de País',
+(SELECT COUNT(desEnvio)
+ FROM Envios
+ WHERE Paises.codPais = Envios.desEnvio AND Envios.fchEnvio BETWEEN '01/01/2016' AND '20/01/2016'
+ GROUP BY desEnvio) AS 'Cant. de Envíos',
+(SELECT MAX(Envios.fchEnvio)
+ FROM Envios
+ WHERE Paises.codPais = Envios.desEnvio AND Envios.fchEnvio BETWEEN '01/01/2016' AND '20/01/2016') AS 'Última Fecha Envío'
+FROM Paises
+
 --------------------------------------------------------------------------------------------------------
 
--- QUERY C
--- MOSTRAR NOMBRE DE TODOS LOS PAISES / CANTIDAD DE ENVIOS EN ENERO / ULTIMA FECHA DE ENVIO EN ENERO
-SET DATEFORMAT DMY
-SELECT P.nomPais AS 'Nombre de País', COUNT(*) AS 'Cant. de Envíos', MAX((E.fchEnvio) AS 'Última Fecha Envío'
-FROM Paises P, Envios E
-WHERE P.codPais = E.desEnvio AND E.fchEnvio BETWEEN '01/01/2016' AND '20/01/2016'
-GROUP BY P.nomPais;
+--------------------------------------------------
+SELECT STUFF('abcdef', 2, 3, 'ijklmn');
+GO
+--------------------------------------------------
+
 
 -- QUERY D
 --
