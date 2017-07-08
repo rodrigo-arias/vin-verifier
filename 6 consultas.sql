@@ -25,65 +25,64 @@ SELECT nomPais 'Nombre de País',
  WHERE Paises.codPais = Envios.desEnvio AND Envios.fchEnvio BETWEEN '01/01/2016' AND '20/01/2016') AS 'Última Fecha Envío'
 FROM Paises
 
---------------------------------------------------------------------------------------------------------
-
---------------------------------------------------
-SELECT STUFF('abcdef', 2, 3, 'ijklmn');
-GO
---------------------------------------------------
-
-
--- QUERY D
---
-
 -- QUERY E
---(Aclaración: se agregó el )
-SELECT V.*, E.fchEnvio
-FROM Vehiculos V INNER JOIN Carga C
-ON V.vin = C.vin INNER JOIN Envios E
-ON C.idEnvio  = E.idEnvio
-WHERE E.fchEnvio = (SELECT MAX(E1.fchEnvio)
-					FROM Envios E1
-					)
+SELECT V.*
+FROM Vehiculos V, Carga C, Envios E
+WHERE V.vin = C.vin AND C.idEnvio  = E.idEnvio AND E.fchEnvio = (SELECT MAX(fchEnvio)
+                                                                 FROM Envios)
 
 -- QUERY F
---Incompleto. Dudas con la parte del país.--
-SELECT V.*, E.fchEnvio
-FROM Fabricantes F INNER JOIN Vehiculos V
-ON F.codFab = V.codFab INNER JOIN Carga C
-ON V.vin  = C.vin INNER JOIN Envios E
-ON C.idEnvio = E.idEnvio
-WHERE NOT EXISTS (SELECT *
-				  FROM Envios E1
-				  WHERE E.fchEnvio BETWEEN '20160101' AND '20160630'
-				  )
-	  AND EXISTS
-				 (SELECT *
-				  FROM Envios E2
-				  WHERE YEAR(E2.fchEnvio) = '2017'
-				  )
-	  AND EXISTS (SELECT *
-				  FROM Envios E3 INNER JOIN Paises P ON E3.desEnvio = P.codPais
-				  WHERE P.nomPais = 'Holanda'
-				  )
+SET DATEFORMAT DMY
+SELECT F.*
+FROM Fabricantes F
+WHERE F.codFab NOT IN (SELECT F.codFab
+				               FROM Vehiculos V, Carga C, Envios E
+				               WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio AND E.fchEnvio BETWEEN '01/01/2016' AND '30/06/2016')
+AND F.codFab IN (SELECT F.codFab
+                FROM Vehiculos V, Carga C, Envios E
+                WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio AND YEAR(E.fchEnvio) = '2017')
+AND F.codFab IN (SELECT F.codFab
+               FROM Vehiculos V, Carga C, Envios E, Paises P
+               WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio AND P.codPais = E.desEnvio AND E.nomPais = 'Holanda')
 
+ -- QUERY G
+ SELECT V.vin, V.modelo, V.color, V.peso, V.caracteristicas, V.codPais, V.codFab, MAX(E.fchEnvio) AS 'fechaUlt.Envío', F.nomFab
+ FROM Fabricantes F, Vehiculos V, Carga C, Envios E
+ WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio AND
+ V.vin IN (SELECT V.vin
+           WHERE V.peso < 2300)
+ GROUP BY V.vin, V.modelo, V.color, V.peso, V.caracteristicas, V.codPais, V.codFab, F.nomFab
 
--- QUERY G
---Duda con Group By. Obliga a poner todos los atributos.
-SELECT V.vin, V.modelo, V.color, V.peso, V.caracteristicas, V.codPais AS 'Cod. País', V.codFab AS 'Cod. Fabri.',  F.nomFab AS 'Nomb. Fabricante', (E.fchEnvio)
-FROM Vehiculos V INNER JOIN Carga C
-ON V.vin = C.vin INNER JOIN Envios E
-ON C.idEnvio  = E.idEnvio INNER JOIN Fabricantes F
-ON V.codFab = F.codFab
-WHERE V.vin IN (SELECT V1.vin
-			   FROM Vehiculos V1
-			   WHERE V1.peso < 2300
-			   )
-GROUP BY V.vin, V.modelo, V.color, V.peso, V.caracteristicas, V.codPais, V.codFab,  F.nomFab, (E.fchEnvio)
+--------------------------------------------------------------------------------------------------------
 
+-- QUERY D
+-- ******************** INCOMPLETO ********************
+SELECT *
+FROM Fabricantes
+WHERE codFab IN (SELECT F.codFab
+                 FROM Fabricantes F, Vehiculos V, Carga C, Envios E
+                 WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio
+                 GROUP BY F.codFab, E.idEnvio
+                 HAVING COUNT(C.vin) > 0) AND
+  codFab NOT IN (SELECT F.codFab
+                 FROM Fabricantes F, Vehiculos V, Carga C, Envios E
+                 WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio
+                 GROUP BY F.codFab, E.idEnvio
+                 HAVING COUNT(C.vin) < 1)
+
+-- ******************** INCOMPLETO ********************
+
+--------------------------------------------------------------------------------------------------------
 
 -- QUERY H
 --UPDATE Vehiculos SET peso = peso - peso * 0.05
 --WHERE
 
 -- QUERY I
+
+--------------------------------------------------------------------------------------------------------
+
+--------------------------------------------------
+SELECT STUFF('abcdef', 2, 3, 'ijklmn');
+GO
+--------------------------------------------------
