@@ -290,12 +290,10 @@ AS
 SELECT @plantas = COUNT(P.codPlan)
 FROM Fabricantes F, Plantas P
 WHERE F.codFab = P.codFab AND F.codFab = @fabricante
-GROUP BY F.codFab
 
 SELECT @modelos = COUNT(V.modelo)
 FROM Fabricantes F, Vehiculos V
 WHERE F.codFab = V.codFab AND F.codFab = @fabricante
-GROUP BY F.codFab
 
 RETURN
 --------------------------------------------------------------------------------------------------------
