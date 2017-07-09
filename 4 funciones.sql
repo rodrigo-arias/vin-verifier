@@ -1,8 +1,7 @@
-USE BD_VEHICULOS;
-GO
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION A
-
+USE BD_VEHICULOS;
+GO
 -- CREATE AUX TABLE
 CREATE TABLE ValorLetra(
   letra character(1) NOT NULL,
@@ -37,7 +36,7 @@ INSERT INTO ValorLetra VALUES
   ('Z',9)
 GO
 -- CREATE FUNCTION
-CREATE FUNCTION fn_valor_letra (@letra character(1))
+CREATE FUNCTION fnValorLetra (@letra character(1))
 RETURNS int
 AS BEGIN
 	DECLARE	@valor int
@@ -72,7 +71,7 @@ INSERT INTO FactorMultiplicador VALUES
   (17,2)
 GO
 -- CREATE FUNCTION
-CREATE FUNCTION fn_factor_multiplicador (@posicion int)
+CREATE FUNCTION fnFactorMultiplicador (@posicion int)
 RETURNS int
 AS BEGIN
 	DECLARE	@factor int
@@ -81,7 +80,7 @@ AS BEGIN
 	RETURN @factor;
 END
 -- CREATE FUNCTION
-CREATE FUNCTION fn_validar_vin (@vin character(17))
+CREATE FUNCTION fnValidarVin (@vin character(17))
 RETURNS character(17)
 AS BEGIN
 	DECLARE
@@ -108,11 +107,11 @@ AS BEGIN
   			END
   		ELSE
   			BEGIN
-  				EXEC @valorLetra = dbo.fn_valor_letra @char
+  				EXEC @valorLetra = dbo.fnValorLetra @char
   			END
   		IF (@pos !=9)
   			BEGIN
-  				EXEC @multiplicador = dbo.fn_factor_multiplicador @pos
+  				EXEC @multiplicador = dbo.fnFactorMultiplicador @pos
   				SET @subtotal = @subtotal + @valorLetra * @multiplicador
   			END
   		SET @pos = @pos + 1
@@ -134,10 +133,8 @@ AS BEGIN
 
   RETURN @retorno
 END
-
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION B
-
 USE BD_VEHICULOS
 GO
 -- CREATE AUX TABLE
@@ -211,7 +208,7 @@ INSERT INTO AnioModelo VALUES
   ('2039','9')
 GO
 -- CREATE FUNCTION
-CREATE FUNCTION fn_anio_vehiculo (@vin character(17))
+CREATE FUNCTION fnAnioVehiculo (@vin character(17))
 RETURNS int
 AS BEGIN
 	DECLARE	@anio int, @caracter char(1)
@@ -222,107 +219,83 @@ AS BEGIN
 END
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION C
-go
-CREATE FUNCTION FN_MayorCantVehicDePais(@fecha1 DATE, @fecha2 DATE)
-RETURNS INT
-AS
-BEGIN
-	 DECLARE @cant INT;
+USE BD_VEHICULOS
+GO
+-- CREATE FUNCTION
+CREATE FUNCTION fnVehiculosMayorDestino(@desde datetime, @hasta datetime)
+RETURNS int
+AS BEGIN
+	 DECLARE @cant int;
 
-     SELECT @cant = COUNT(V.vin)
-	 FROM Vehiculos V INNER JOIN Carga C
-	 ON V.vin = C.vin INNER JOIN Envios E
-	 ON C.idEnvio  = E.idEnvio INNER JOIN Paises P
-	 ON E.desEnvio = P.codPais
-	 WHERE E.fchEnvio BETWEEN @fecha1 AND @fecha2
-	 GROUP BY P.codPais
-	 HAVING COUNT(V.vin) >= ALL (SELECT COUNT(V.vin)
-								 FROM Vehiculos V INNER JOIN Carga C
-								 ON V.vin = C.vin INNER JOIN Envios E
-								 ON C.idEnvio  = E.idEnvio INNER JOIN Paises P
-								 ON E.desEnvio = P.codPais
-								 GROUP BY P.nomPais
-								 )
+   SELECT TOP 1 @cant = COUNT(V.vin)
+   FROM Vehiculos V, Carga C, Envios E, Paises P
+   WHERE V.vin = C.vin AND C.idEnvio = E.idEnvio AND E.desEnvio = P.codPais AND E.fchEnvio BETWEEN @desde AND @hasta
+   GROUP BY P.nomPais
+   ORDER BY COUNT(v.vin) DESC
 
 	 RETURN @cant;
-END;
-
---****************************************
---EJECUCI�N DE "FN_MayorCantVehicDePais"
---****************************************
-go
-Declare @fecha1 DATE
-Set @fecha1 = '2013/05/06'
-
-Declare @fecha2 DATE
-Set @fecha2 = '2018/06/07'
-
-DECLARE @retorno INT
-EXEC @retorno = dbo.FN_MayorCantVehicDePais @fecha1, @fecha2;
-
-PRINT 'La mayor cantidad de veh�culos que recibi� un pa�s entre la fecha ' + convert(varchar(10), @fecha1)  + ' y ' +  convert(varchar(10), @fecha2) + ' es: ' + convert(varchar(10), @retorno);
-
+END
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION D
+USE BD_VEHICULOS
+GO
+-- CREATE PROCEDURE
+CREATE PROCEDURE spDestinosLocales
+@desde datetime,
+@hasta datetime
+AS
+DECLARE
+@local nvarchar(5)
 
+SELECT @local = nomPais FROM Paises WHERE codPais = '#'
+
+IF(@local IS NULL)
+  BEGIN
+    INSERT INTO Paises VALUES ('#', 'LOCAL')
+  END
+
+UPDATE Envios
+SET desEnvio = '#'
+WHERE idEnvio IN (SELECT E.idEnvio
+                  FROM Envios E, Carga C, Vehiculos V
+                  WHERE E.idEnvio = C.idEnvio AND C.vin = V.vin AND V.codPais = E.desEnvio AND fchEnvio BETWEEN @desde AND @hasta)
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION E
+USE BD_VEHICULOS
+GO
+-- CREATE FUNCTION
+CREATE FUNCTION fnPaisMenosEnvios(@desde datetime, @hasta datetime)
+RETURNS varchar(30)
+AS BEGIN
+	 DECLARE @pais varchar(30);
 
---E)
---PENDIENTE ==> SOLUCIONAR PARA QUE ENVIE VARIOS RESULTADOS.
-go
-CREATE FUNCTION FN_PaisConMenosEnvios(@fecha1 DATE, @fecha2 DATE)
-RETURNS VARCHAR(30)
-AS
-BEGIN
-	 DECLARE @pais VARCHAR(1500);
-
-	 SELECT @pais = COALESCE(@pais,' ') + P.nomPais + ' ; '
-	 FROM Vehiculos V INNER JOIN Carga C
-	 ON V.vin = C.vin INNER JOIN Envios E
-	 ON C.idEnvio  = E.idEnvio INNER JOIN Paises P
-	 ON E.desEnvio = P.codPais
-	 WHERE E.fchEnvio BETWEEN @fecha1 AND @fecha2
-	 GROUP BY  P.nomPais
-	 HAVING COUNT(V.vin) <= ALL (SELECT COUNT(V.vin)
-								 FROM Vehiculos V INNER JOIN Carga C
-								 ON V.vin = C.vin INNER JOIN Envios E
-								 ON C.idEnvio  = E.idEnvio INNER JOIN Paises P
-								 ON E.desEnvio = P.codPais
-								 GROUP BY P.nomPais)
+	 SELECT TOP 1 @pais = p.nomPais
+   FROM Vehiculos V, Carga C, Envios E, Paises P
+   WHERE V.vin = C.vin AND C.idEnvio = E.idEnvio AND E.desEnvio = P.codPais AND E.fchEnvio BETWEEN @desde AND @hasta
+   GROUP BY P.nomPais
+   ORDER BY COUNT(v.vin) ASC
 
 	 RETURN @pais;
-END;
-
---****************************************
---EJECUCI�N DE "FN_PaisQueRecibioMasVehic"
---****************************************
-go
-Declare @fecha1 DATE
-Set @fecha1 = '2013/05/06'
-
-Declare @fecha2 DATE
-Set @fecha2 = '2018/06/07'
-
-DECLARE @retorno VARCHAR(1500);
-
-eXEC @retorno = dbo.FN_PaisConMenosEnvios @fecha1, @fecha2;
-
-PRINT 'El pa�s al cual se hizo menos cantidad de envios entre la fecha ' + convert(varchar(10), @fecha1)  + ' y ' +  convert(varchar(10), @fecha2) + ' es: ' + convert(varchar(1500), @retorno);
-
+END
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION F
-
---F)
---FALTA MEJORAR. MUESTRA LAS DOS COLUMNAS IGUALES.
-go
-CREATE PROCEDURE SP_cantPlantasYvehic @codFabricante CHARACTER(2), @cantPlantas INT OUTPUT, @cantModVehic INT OUTPUT
+USE BD_VEHICULOS
+GO
+-- CREATE PROCEDURE
+CREATE PROCEDURE spPlantasModelosFabricante
+@fabricante character(2),
+@plantas int output,
+@modelos int output
 AS
-BEGIN
-	SELECT COUNT(V.vin), COUNT(P.codPlan)
-	FROM Fabricantes F INNER JOIN Plantas P
-	ON F.codFab = P.codFab INNER JOIN Vehiculos V
-	ON F.codFab = V.codFab
-	WHERE	F.codFab = @codFabricante
-END
+SELECT @plantas = COUNT(P.codPlan)
+FROM Fabricantes F, Plantas P
+WHERE F.codFab = P.codFab AND F.codFab = @fabricante
+GROUP BY F.codFab
+
+SELECT @modelos = COUNT(V.modelo)
+FROM Fabricantes F, Vehiculos V
+WHERE F.codFab = V.codFab AND F.codFab = @fabricante
+GROUP BY F.codFab
+
+RETURN
 --------------------------------------------------------------------------------------------------------

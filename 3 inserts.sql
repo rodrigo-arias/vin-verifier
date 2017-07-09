@@ -113,6 +113,7 @@ GO
 -- INSERT PLANTAS
 INSERT INTO Plantas VALUES
 (139495, 'BM', 'Starba', 'Berlin, Alemania', 'info@starba.com', 'W'),
+(139496, 'BM', 'Lower', 'Berlin, Alemania', 'info@lower.com', 'W'),
 (902778, 'MC', 'Torport', 'Rio de Janeiro, Brazil', 'info@torport.com', '9'),
 (654911, 'AU', 'Resaic', 'Bologna, Italia', 'info@resaic.com', 'Z'),
 (136342, 'NI', 'Aluzukanc', 'Nueva Delhi, India', 'info@aluzukanc.com', 'M'),
