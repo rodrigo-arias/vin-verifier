@@ -88,7 +88,7 @@ WHERE vin NOT IN (SELECT V.vin
 GO
 --------------------------------------------------------------------------------------------------------
 -- QUERY I
-SELECT Fabricantes.*
+SELECT DISTINCT Fabricantes.*
 FROM Fabricantes, Plantas, Paises
 WHERE Fabricantes.codFab = Plantas.codFab AND Plantas.codPais = Paises.codPais AND Paises.nomPais = 'Japón' AND
 Fabricantes.codFab IN (SELECT F.codFab
