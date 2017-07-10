@@ -30,21 +30,23 @@ FROM Paises
 GO
 --------------------------------------------------------------------------------------------------------
 -- QUERY D
--- ******************** INCOMPLETO ********************
 SELECT *
 FROM Fabricantes
 WHERE codFab IN (SELECT F.codFab
                  FROM Fabricantes F, Vehiculos V, Carga C, Envios E
                  WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio
                  GROUP BY F.codFab, E.idEnvio
-                 HAVING COUNT(C.vin) > 500) AND
-  codFab NOT IN (SELECT F.codFab
-                 FROM Fabricantes F, Vehiculos V, Carga C, Envios E
-                 WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio
-                 GROUP BY F.codFab, E.idEnvio
-                 HAVING COUNT(C.vin) < 100)
+                 HAVING COUNT(C.vin) > 0) AND
+	codFab NOT IN ((SELECT fabEnvios.codFab
+					        FROM (SELECT COUNT(auxTable.codFab) as 'cantEnvios', auxTable.codFab
+							          FROM (SELECT F.codFab
+								              FROM Fabricantes F, Vehiculos V, Carga C, Envios E
+								              WHERE F.codFab = V.codFab AND V.vin = C.vin AND E.idEnvio = C.idEnvio
+								              GROUP BY F.codFab, E.idEnvio
+								              HAVING COUNT(C.vin) < 2) auxTable
+							          GROUP BY auxTable.codFab) fabEnvios
+						      WHERE fabEnvios.cantEnvios > 3))
 GO
--- ******************** INCOMPLETO ********************
 --------------------------------------------------------------------------------------------------------
 -- QUERY E
 SELECT V.*

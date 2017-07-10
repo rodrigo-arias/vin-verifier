@@ -242,21 +242,19 @@ INSERT INTO Carga VALUES (14,1,'JS2RA62S075380854',2877.00)
 INSERT INTO Carga VALUES (14,2,'JS2RA62S075380854',2572.50)
 GO
 ----------------------------------------------------------------------------
--- INVALID DATA FOR TEST
-INSERT INTO Paises VALUES
-('T', 'Uzbekistán'), -- REPEATED PRIMARY KEY
-('U', 'Uruguay') -- COUNTRY NOT UNIQUE
-INSERT INTO Fabricantes VALUES
-('FF', 'Ferrari', 'Maranello, Italia', 'info@ferrari', 29500), -- EMAIL NOT UNIQUE
-('LF', 'Lifan Industry Group', 'Chongqing, China', 'info@lifan', 0) -- NO EMPLOYEES
-INSERT INTO Vehiculos VALUES
-('1M2K193C0PI039279', 'Volkswagen Vento', 'Negro Classic', 1437, '2.5R, gasolina 5 s., manual', 'W', 'VW'), -- VIN CONTAIN 'I'
-('1HFSC47L48A711588', 'Chevrolet Corsa', 'Blano Marfil', 948, '92 Cv, gasolina 5 s., manual', 'U', 'FF') -- INVALID FOREIGN KEY
-INSERT INTO Plantas VALUES
-(453448, 'SE', 'Sevel', 'Montevideo, Uruguay', 'info@sevel.com', 'U'), -- INVALID FOREIGN KEY
-(453448, 'SE', 'Sevel', 'Montevideo, Uruguay', 'info@bran.com', 'U') -- EMAIL NOT UNIQUE
-INSERT INTO Envios VALUES
-('04/07/14',171900,'U','L') -- INVALID FOREIGN KEY
-INSERT INTO Carga VALUES
-(22, 30, '1GKFC06289R108826',1508.85) -- INVALID FOREIGN KEY
+-- INVALID DATA (CONTRAINTS)
+INSERT INTO Paises VALUES ('T', 'Uzbekistán') -- REPEATED PRIMARY KEY
+INSERT INTO Paises VALUES ('U', 'Uruguay') -- COUNTRY NOT UNIQUE
+INSERT INTO Fabricantes VALUES ('FF', 'Ferrari', 'Maranello, Italia', 'info@ferrari', 29500) -- EMAIL NOT UNIQUE
+INSERT INTO Fabricantes VALUES ('LF', 'Lifan Industry Group', 'Chongqing, China', 'info@lifan', 0) -- NO EMPLOYEES
+INSERT INTO Vehiculos VALUES ('1M2K193C0PI039279', 'Volkswagen Vento', 'Negro Classic', 1437, '2.5R, gasolina 5 s., manual', 'W', 'VW') -- VIN CONTAIN 'I'
+INSERT INTO Vehiculos VALUES ('1HFSC47L48A711588', 'Chevrolet Corsa', 'Blano Marfil', 948, '92 Cv, gasolina 5 s., manual', 'U', 'FF') -- INVALID FOREIGN KEY
+INSERT INTO Plantas VALUES (453448, 'SE', 'Sevel', 'Montevideo, Uruguay', 'info@sevel.com', 'U') -- INVALID FOREIGN KEY
+INSERT INTO Plantas VALUES (453448, 'SE', 'Sevel', 'Montevideo, Uruguay', 'info@bran.com', 'U') -- EMAIL NOT UNIQUE
+INSERT INTO Envios VALUES ('04/07/14',171900,'U','L') -- INVALID FOREIGN KEY
+INSERT INTO Carga VALUES (22, 30, '1GKFC06289R108826',1508.85) -- INVALID FOREIGN KEY
+-- INVALID DATA (TRIGGERS)
+INSERT INTO Envios VALUES ('04/07/14',171900,'L','L') -- INVALID oriEnvio = desEnvio
+INSERT INTO Carga VALUES (22, 30, '1GKFC03289R108826',1508.85) -- INVALID FOREIGN KEY
+INSERT INTO Vehiculos VALUES ('1M23193C0PI039279', 'Volkswagen Vento', 'Negro Classic', 1437, '2.5R, gasolina 5 s., manual', 'W', 'VW') -- INVALID VIN
 --------------------------------------------------------------------------------------------------------

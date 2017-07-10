@@ -31,7 +31,7 @@ BEGIN
        (@vin,@modelo,@color,@peso,@caracteristicas,@codPais,@codFab)
   END
   ELSE
-    PRINT 'VIN incorrecto, no sé procesó la línea. Su VIN correcto podría ser ' + @valido + '.'
+    PRINT 'VIN incorrecto, no sé procesó la línea. Su VIN correcto podría ser ' + RTRIM(@valido) + '.'
 END
 GO
 --------------------------------------------------------------------------------------------------------
@@ -80,7 +80,8 @@ BEGIN
   @fchEnvio datetime,
 	@pesoEnvio numeric(12,2),
 	@oriEnvio character(1),
-	@desEnvio character(1)
+	@desEnvio character(1),
+  @pais varchar(30)
 
   SELECT @fchEnvio = fchEnvio, @pesoEnvio = pesoEnvio, @oriEnvio = oriEnvio, @desEnvio = desEnvio
   FROM Inserted
@@ -91,7 +92,11 @@ BEGIN
        (@fchEnvio, @pesoEnvio, @oriEnvio, @desEnvio)
   END
   ELSE
-    PRINT 'El país de origen no puede ser igual al país de destino (' + @oriEnvio + '). No sé procesó la línea.'
+    SELECT @pais = nomPais
+    FROM Envios E, Paises P
+    WHERE E.oriEnvio = P.codPais
+
+    PRINT 'El país de origen no puede ser igual al país de destino (' + @oriEnvio + '-' + @pais + '). No sé procesó la línea.'
 END
 GO
 --------------------------------------------------------------------------------------------------------
