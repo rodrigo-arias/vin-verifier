@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+-- DISPARADORES
+--------------------------------------------------------------------------------------------------------
 -- TRIGGER A
 USE BD_VEHICULOS;
 GO
@@ -31,10 +33,9 @@ BEGIN
   ELSE
     PRINT 'VIN incorrecto, no sé procesó la línea. Su VIN correcto podría ser ' + @valido + '.'
 END
+GO
 --------------------------------------------------------------------------------------------------------
 -- TRIGGER B
-USE BD_VEHICULOS;
-GO
 -- CREATE TRIGGER
 CREATE TRIGGER trIngresarCarga
   ON Carga
@@ -66,10 +67,9 @@ BEGIN
       WHERE idEnvio = @idEnvio
     END
 END
+GO
 --------------------------------------------------------------------------------------------------------
 -- TRIGGER C
-USE BD_VEHICULOS;
-GO
 -- CREATE TRIGGER
 CREATE TRIGGER trIngresarEnvio
   ON Envios
@@ -93,10 +93,9 @@ BEGIN
   ELSE
     PRINT 'El país de origen no puede ser igual al país de destino (' + @oriEnvio + '). No sé procesó la línea.'
 END
+GO
 --------------------------------------------------------------------------------------------------------
 -- TRIGGER D
-USE BD_VEHICULOS;
-GO
 -- CREATE TRIGGER
 CREATE TRIGGER trBorrarEnvios
   ON Envios
@@ -113,4 +112,5 @@ BEGIN
   WHERE idEnvio IN (SELECT idEnvio
 	                  FROM deleted)
 END
+GO
 --------------------------------------------------------------------------------------------------------

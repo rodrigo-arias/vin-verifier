@@ -1,4 +1,6 @@
 --------------------------------------------------------------------------------------------------------
+-- FUNCIONES Y PROCEDIMIENTOS
+--------------------------------------------------------------------------------------------------------
 -- FUNCTION A
 USE BD_VEHICULOS;
 GO
@@ -44,6 +46,7 @@ AS BEGIN
 	SELECT @valor = valor FROM ValorLetra WHERE letra = @letra;
 	RETURN @valor;
 END
+GO
 -- CREATE AUX TABLE
 CREATE TABLE FactorMultiplicador(
   posicion int NOT NULL,
@@ -79,6 +82,7 @@ AS BEGIN
 	SELECT @factor = multiplicador FROM FactorMultiplicador WHERE posicion = @posicion;
 	RETURN @factor;
 END
+GO
 -- CREATE FUNCTION
 CREATE FUNCTION fnValidarVin (@vin character(17))
 RETURNS character(17)
@@ -133,9 +137,9 @@ AS BEGIN
 
   RETURN @retorno
 END
+GO
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION B
-USE BD_VEHICULOS
 GO
 -- CREATE AUX TABLE
 CREATE TABLE AnioModelo(
@@ -217,9 +221,9 @@ AS BEGIN
 	SELECT @anio = anio FROM AnioModelo WHERE valor = @caracter;
 	RETURN @anio;
 END
+GO
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION C
-USE BD_VEHICULOS
 GO
 -- CREATE FUNCTION
 CREATE FUNCTION fnVehiculosMayorDestino(@desde datetime, @hasta datetime)
@@ -235,9 +239,9 @@ AS BEGIN
 
 	 RETURN @cant;
 END
+GO
 --------------------------------------------------------------------------------------------------------
--- FUNCTION D
-USE BD_VEHICULOS
+-- PROCEDURE D
 GO
 -- CREATE PROCEDURE
 CREATE PROCEDURE spDestinosLocales
@@ -259,9 +263,9 @@ SET desEnvio = '#'
 WHERE idEnvio IN (SELECT E.idEnvio
                   FROM Envios E, Carga C, Vehiculos V
                   WHERE E.idEnvio = C.idEnvio AND C.vin = V.vin AND V.codPais = E.desEnvio AND fchEnvio BETWEEN @desde AND @hasta)
+GO
 --------------------------------------------------------------------------------------------------------
 -- FUNCTION E
-USE BD_VEHICULOS
 GO
 -- CREATE FUNCTION
 CREATE FUNCTION fnPaisMenosEnvios(@desde datetime, @hasta datetime)
@@ -277,9 +281,9 @@ AS BEGIN
 
 	 RETURN @pais;
 END
+GO
 --------------------------------------------------------------------------------------------------------
--- FUNCTION F
-USE BD_VEHICULOS
+-- PROCEDURE F
 GO
 -- CREATE PROCEDURE
 CREATE PROCEDURE spPlantasModelosFabricante
@@ -296,4 +300,5 @@ FROM Fabricantes F, Vehiculos V
 WHERE F.codFab = V.codFab AND F.codFab = @fabricante
 
 RETURN
+GO
 --------------------------------------------------------------------------------------------------------
