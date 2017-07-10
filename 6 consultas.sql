@@ -74,7 +74,7 @@ UPDATE Vehiculos
 SET peso = peso - peso * 0.05
 WHERE vin NOT IN (SELECT V.vin
                   FROM Vehiculos V, Carga C, Envios E
-                  WHERE V.vin = C.vin AND C.idEnvio = E.idEnvio AND YEAR(fchEnvio) >= dbo.fn_anio_vehiculo(V.vin) + 1)
+                  WHERE V.vin = C.vin AND C.idEnvio = E.idEnvio AND YEAR(fchEnvio) >= dbo.fnAnioVehiculo(V.vin) + 1)
 --------------------------------------------------------------------------------------------------------
 -- QUERY I
 SELECT Fabricantes.*
