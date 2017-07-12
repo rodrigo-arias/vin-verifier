@@ -124,7 +124,13 @@ AS BEGIN
   SET @resto = @subtotal % 11
 
   DECLARE @aux char(1)
-  SET @aux = CONVERT(char(1), @resto)
+
+  IF(@resto = 10)
+    BEGIN
+      SET @aux = 'X'
+    END
+  ELSE
+    SET @aux = CONVERT(char(1), @resto)
 
   IF(@aux = @verificador)
   	BEGIN
